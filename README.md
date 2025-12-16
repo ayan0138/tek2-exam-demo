@@ -1,1 +1,1 @@
-# Starter template for GitHub Actions
+# Tek2 exam demo application
