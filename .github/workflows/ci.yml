@@ -6,9 +6,9 @@ on:
       - main
   pull_request:
     branches:
-      - main
-  #workflow_dispatch:
-#manual trigger
+    - main
+workflow_dispatch:
+#manual trigger -> fjern workflow_dispatch til eksamen og brug kun push og pull_request!
 jobs:
   test:
     runs-on: ubuntu-latest
