@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: exam-db # optional: give the database container a specific name
     image: mysql:8.0
     restart: unless-stopped
     environment:
@@ -17,6 +18,7 @@ services:
       retries: 5
 
   app:
+    container_name: exam-app # optional: give the application container a specific name
     build:
       context: .
       dockerfile: Dockerfile
