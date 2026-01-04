@@ -1,25 +1,28 @@
 services:
   db:
-    container_name: the_db
-    image: mysql:8.0
+    container_name: the_proddb
+
     restart: unless-stopped
+    image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:3307:3306"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 20s
       retries: 5
 
+
   app:
-    container_name: the_app
-    image: ghcr.io/ayan0138/tek2-exam-demo:latest #ghcr.io/ek-osnb/tek2-exam-demo:latest
+    container_name: the_prodapp
+
+    image: ghcr.io/ayan0138/tek2-exam-demo:latest
     restart: unless-stopped
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
@@ -27,16 +30,18 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8081:8080"
     depends_on:
       db:
         condition: service_healthy
+
     healthcheck:
-      test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health >/dev/null 2>&1 || exit 1" ]
-      interval: 5s
-      timeout: 2s
-      retries: 2
-      start_period: 10s
+          test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health >/dev/null 2>&1 || exit 1" ]
+          interval: 5s
+          timeout: 2s
+          retries: 2
+          start_period: 10s
+
 
 volumes:
   db_data:
